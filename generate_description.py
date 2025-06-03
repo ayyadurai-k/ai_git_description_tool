@@ -154,21 +154,21 @@ def generate_description(
         "Provide the description using the following markdown structure:",
         "",
         "## [Infer Type]: [Clear and Concise Title]",
-        "   - Infer the PR type (e.g., 'Feat', 'Fix', 'Refactor', 'Chore', 'Docs') from the Git diff, commit messages, and user context. ",
+        "   - Infer the PR type (e.g., 'feat', 'fix', 'refactor', 'chore', 'docs') from the Git diff, commit messages, and user context. ",
         "   - Create a concise title that summarizes the core change.",
         "",
-        '### Problem/Motivation (The "Why")',
+        '### Problem/Motivation',
         "   - Explain why these changes are being made. "
         "   - Prioritize information from the 'User Provided Context' for this section if applicable. "
         "   - Supplement with inferences from Git Diff and Commit Messages if the user context is brief or broad.",
         "",
-        '### Changes Made (The "What")',
+        '### Changes Made',
         "   - Provide a high-level overview of the technical changes. "
         "   - Mention key files or areas affected. "
         "   - **DO NOT include any code lines or snippets. Describe in natural language only.**"
         "   - Integrate any relevant 'Changes Made' details found in the 'User Provided Context'.",
         "",
-        '### How to Test (The "How")',
+        '### Testing Instruction',
         "   - **Extract any specific, actionable testing instructions or preliminary notes from the 'User Provided Context'(If not provided ignore user context) and based on git diff and commit history and present them here.**"
         "",
         "### Screenshots/Gifs/Videos (For UI Changes)",
@@ -176,7 +176,6 @@ def generate_description(
         "   - If no visual aids are mentioned, use the following placeholder:"
         "     `*(If applicable, please embed visual aids here, showing before-and-after if relevant.)*`",
         "",
-        "--- Generated Pull Request Description ---",  # This acts as a final instruction for the AI to start
     ]
 
     prompt_parts.extend(desc_prompt_parts)

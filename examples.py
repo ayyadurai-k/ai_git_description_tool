@@ -42,6 +42,10 @@ def load_examples(examples_file_path):
             print(
                 f"Loaded {len(valid_examples)} example(s) from '{examples_file_path}'."
             )
+            
+            # REDUCE EXAMPLES 
+            if len(valid_examples) > 5 :
+                return valid_examples[:5]
             return valid_examples
     except json.JSONDecodeError:
         print(
