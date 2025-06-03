@@ -1,5 +1,4 @@
 # Byte-compiled / optimized / DLL files
-.env
 __pycache__/
 *.pyc
 *.pyd
@@ -73,8 +72,13 @@ media/
 # Example files that should not be committed
 # For instance, if you have a settings file with sensitive information
 config.py
+.env
+
 
 # Miscellaneous
 *~
 *.bak
 *.swp
+
+#local
+examples.json

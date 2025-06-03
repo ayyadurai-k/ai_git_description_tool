@@ -3,11 +3,16 @@ import subprocess
 import google.generativeai as genai
 from dotenv import load_dotenv
 
+from examples import load_examples, save_example
+
 # Load environment variables from .env file
 load_dotenv()
 
 # Configure Gemini API
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+EXAMPLES_FILE = "examples.json"  # File to store examples
+
+
 if not GOOGLE_API_KEY:
     raise ValueError("GOOGLE_API_KEY not found in .env file.")
 genai.configure(api_key=GOOGLE_API_KEY)
@@ -91,7 +96,7 @@ def get_git_commit_messages(base_branch="main"):
 
 
 def generate_description(
-    user_context, diff_content, commit_history
+    user_context, diff_content, commit_history, examples=None
 ):  # user_context now handles all input
     """
     Sends user context, diff, and commit history to the Gemini model
@@ -100,7 +105,27 @@ def generate_description(
     if not diff_content and not commit_history:
         return "No changes or new commits found in the current branch compared to main. Cannot generate a meaningful description."
 
-    prompt_parts = [
+    prompt_parts = []
+
+    # Add this entire `if examples:` block right after `prompt_parts = []`
+    if examples:
+        for i, example in enumerate(examples):
+            prompt_parts.extend(
+                [
+                    f"--- Example {i+1}: Input Context ---",
+                    f"User Provided Context: {example['user_context']}",
+                    f"Git Diff: ```diff\n{example['git_diff']}\n```",
+                    f"Unique Commit Messages: ```\n{example['commit_messages']}\n```",
+                    "",
+                    f"--- Example {i+1}: Desired Output PR Description ---",
+                    example["desired_pr_description"],
+                    "",
+                ]
+            )
+        prompt_parts.append("--- End Examples ---")
+        prompt_parts.append("")
+
+    desc_prompt_parts = [
         "You are an expert software engineer and a technical writer whose job is to generate "
         "high-quality Pull Request descriptions. "
         "Generate a PR description that follows the provided best practices. "
@@ -154,6 +179,8 @@ def generate_description(
         "--- Generated Pull Request Description ---",  # This acts as a final instruction for the AI to start
     ]
 
+    prompt_parts.extend(desc_prompt_parts)
+
     try:
         response = model.generate_content(prompt_parts)
         return response.text
@@ -167,6 +194,8 @@ if __name__ == "__main__":
     if not os.path.exists(".git"):
         print("Error: This script must be run from within a Git repository.")
         exit(1)
+
+    loaded_examples = load_examples(EXAMPLES_FILE)
 
     print("\n--- PR Description Generator ---")
     print("This tool will help you create a structured Pull Request description.")
@@ -198,7 +227,9 @@ if __name__ == "__main__":
     else:
         print("\nGenerating AI description (this may take a moment)...")
         # Pass the single user context to the generation function
-        description = generate_description(user_context_input, diff, commits)
+        description = generate_description(
+            user_context_input, diff, commits, examples=loaded_examples
+        )
         print("\n--- AI Generated Pull Request Description ---")
         print(description)
         print("---------------------------------------------")
@@ -206,3 +237,23 @@ if __name__ == "__main__":
             "\n(IMPORTANT: Please review and refine this description as needed. "
             "The AI attempts to integrate your notes, but always verify accuracy!)"
         )
+
+        save_choice = (
+            input(
+                "\nDo you want to save this interaction as a new example for future AI learning? (y/N): "
+            )
+            .strip()
+            .lower()
+        )
+
+        if save_choice == "y":
+            new_example = {
+                "user_context": user_context_input,
+                "git_diff": diff,
+                "commit_messages": commits,
+                "desired_pr_description": description,  # Save the AI's current output
+            }
+            save_example(new_example, EXAMPLES_FILE)
+            print(
+                "Example saved. Remember to manually edit 'examples.json' if you refine the description further!"
+            )
