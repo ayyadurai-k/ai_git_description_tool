@@ -1,3 +1,80 @@
-env/
-
+# Byte-compiled / optimized / DLL files
 .env
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+.eggs/
+
+# Distribution / packaging
+dist/
+build/
+*.egg
+*.whl
+
+# C extensions
+*.so
+
+# Installer logs
+pip-log.txt
+pip-delete-this-arg.txt
+
+# Unit test / coverage reports
+.tox/
+.coverage
+.cache/
+.pytest_cache/
+htmlcov/
+.coverage.*
+
+# Virtual environment
+.venv/
+venv/
+env/
+/bin/
+/include/
+/lib/
+/share/
+/local/
+
+# Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS junk files
+.DS_Store
+Thumbs.db
+
+# My Mac
+.Trashes
+._*
+
+
+# Python specific files
+# Jupyter Notebook / IPython
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+
+# Logs
+*.log
+
+# Runtime data
+*.sqlite3
+*.db
+
+# Data files
+data/
+media/
+
+# Example files that should not be committed
+# For instance, if you have a settings file with sensitive information
+config.py
+
+# Miscellaneous
+*~
+*.bak
+*.swp
