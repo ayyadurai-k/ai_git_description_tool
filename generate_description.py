@@ -164,7 +164,7 @@ def generate_description(
         "",
         '### Changes Made',
         "   - Provide a high-level overview of the technical changes. "
-        "   - Mention key files or areas affected. "
+        "   - Dont mention any files or code lines. "
         "   - **DO NOT include any code lines or snippets. Describe in natural language only.**"
         "   - Integrate any relevant 'Changes Made' details found in the 'User Provided Context'.",
         "",
